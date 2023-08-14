@@ -146,7 +146,7 @@ int add_task(char* task_name, char* task_text, char* date,char* task_path) {
         fprintf(stderr,"Couldn't open file %s\n",task_path);
         return -1;
     }
-    fprintf(task_list,"%s,%s,%s\n",task_name,task_text,task_path);
+    fprintf(task_list,"%s,%s,%s\n",task_name,task_text,date);
     fclose(task_list);
     return 1;
 };
@@ -276,17 +276,49 @@ void display_upcoming(char* task_path) {
 
 };
 
+char help[] = "\nSherlly's Better Task Manager \n--help\t-h\t\tHelp \n--upcoming\t-u\tPrints status bar summary |❌8 ❗5  📅0 | \n--list\t-l\t\tLists tasks with colour coded urgency \n--add\t-a\t\tAdd task like so btm --add -n \"name\" -t \"task desc\" -d \"YYYY-mm-dd\" \n--remove\t-r\t\tRemove task like so btm --remove \"name\"\n\n";
 
 int main(int argc, char** argv) {
 	char task_path[1024];
     char * home = getenv("HOME");
 	/* Set up task_path so it points to the flashcards folder */
 	sprintf(task_path,"%s/%s",home,PATH_TO_FILE_FROM_HOME);
+    if (!strcmp(argv[1],"--help") || !strcmp(argv[1],"-h")) {
+        printf("%s\n",help);
+    }
+    else if (!strcmp(argv[1],"--upcoming") || !strcmp(argv[1],"-u")) {
+        display_upcoming(task_path);
+    }
+    else if (!strcmp(argv[1],"--list") || !strcmp(argv[1],"-l")) {
+        display_tasks(task_path);
+    }
+    else if (!strcmp(argv[1],"--add") || !strcmp(argv[1],"-a")) {
+       char* name; 
+       char* text; 
+       char* date; 
+       for (int c = 2; c<argc;c++) {
+           char* current_arg = argv[c];
+           if (!strcmp(current_arg,"-n") || !strcmp(current_arg,"--name")) {
+               name = argv[++c];
+           }
+           else if (!strcmp(current_arg,"-t") || !strcmp(current_arg,"--text")) {
+               text = argv[++c];
+           }
+           else if (!strcmp(current_arg,"-d") || !strcmp(current_arg,"--date")) {
+               date = argv[++c];
+           }
+       }
+       add_task(name,text,date,task_path);
 
-    display_upcoming(task_path);
-
-
-
+    }
+    else if (!strcmp(argv[1],"--remove") || !strcmp(argv[1],"-r")) {
+        remove_task_by_name(task_path,argv[2]);
+    }
+    else {
+        fprintf(stderr,"Unable to parse arguments, see help");
+        printf("%s\n",help);
+        exit(0);
+    }
 
     return EXIT_SUCCESS;
 }
