@@ -145,7 +145,7 @@ int add_task(char* task_name, char* task_text, char* date,char* task_path) {
         fprintf(stderr,"Couldn't open file %s\n",task_path);
         return 0;
     }
-    fprintf(task_list,"%s,%s,%s\n",task_name,task_text,task_path);
+    fprintf(task_list,"%s,%s,%s\n",task_name,task_text,date);
     fclose(task_list);
     return 1;
 };
