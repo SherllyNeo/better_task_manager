@@ -10,7 +10,22 @@
 #include <dirent.h>
 #include <stdbool.h>
 
-#define SIZE 1000
+#define BLK "\e[0;30m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define YEL "\e[0;33m"
+#define BLU "\e[0;34m"
+#define MAG "\e[0;35m"
+#define CYN "\e[0;36m"
+#define WHT "\e[0;37m"
+
+#define SIZE 100000
+
+enum Emergency {
+    LOW,
+    HIGH,
+    URGENT
+};
 
 struct Task {
     char date[SIZE];
@@ -32,7 +47,7 @@ struct Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
         /* Make a struct Task to add to task_array */
         struct Task tmp_task = {};
         while (token) {
-            /* this will be 4 each time. The promt, answer, date and delay */
+            /* this will be 3 each time. The promt, answer, date and delay */
             int parse_helper = flag % 3;
             switch(parse_helper) {
                 case 0:
@@ -70,9 +85,6 @@ struct Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
     return task_array;
 }
 
-void print_task(struct Task task) {
-	printf("task name: %s, task text: %s, task date: %s\n",task.task_name,task.task_text,task.date);
-}
 
 
 int remove_task_by_name(char *filepath, char* task_to_remove) {
@@ -102,7 +114,6 @@ int remove_task_by_name(char *filepath, char* task_to_remove) {
         if (!task_name) {
             task_name = "";
         }
-        printf("\nToken name when scanning for removal: %s\n",task_name);
 
 	    /* Check for end of file */
 	    if (feof(file)) {
@@ -110,7 +121,6 @@ int remove_task_by_name(char *filepath, char* task_to_remove) {
 	    }
 	    /* Replace if first column is the name to remove */
 	    else if (!strcmp(task_name,task_to_remove)) {
-            printf("\nFound a match: %s and %s\n",task_name,task_to_remove);
             current_line++;
 	    }
 	    else  {
@@ -142,30 +152,104 @@ int add_task(char* task_name, char* task_text, char* date,char* task_path) {
 };
 
 
+void swap(struct Task* xp, struct Task* yp)
+{
+    struct Task temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+  
+void selectionSort(struct Task* arr,int size_of_array)
+{
+    int i, j, min_idx;
+  
+    for (i = 0; i < size_of_array - 1; i++) {
+        min_idx = i;
+        for (j = i + 1; j < size_of_array; j++) {
+            printf("dates pre difference: %s %s",arr[j].date,arr[min_idx].date);
+            int difference = getDifference_str(arr[j].date,arr[min_idx].date);
+            printf("dates post difference: %s %s",arr[j].date,arr[min_idx].date);
+            if (difference < 0) 
+                min_idx = j;
+            }
+        swap(&arr[min_idx], &arr[i]);
+    }
+}
+
+enum Emergency categorise_task_date(char* task_date) {
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    char current_day[64];
+    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
+
+    int days_to_task = getDifference_str(task_date,current_day);
+    enum Emergency priority;
+    if (days_to_task < 0 ) {
+        priority = URGENT;
+    }
+    else if (days_to_task < 2) {
+        priority = HIGH;
+    }
+    else  {
+        priority = LOW;
+    }
+    return priority;
+};
+
+void print_task(struct Task task,char* current_day) {
+    int days_to_task = getDifference_str(task.date,current_day);
+    enum Emergency priority = categorise_task_date(task.date);
+    if (priority == URGENT) {
+	    printf(RED "\n------------\ntask name: %s \ntask text: %s \ntask date: %s \ndays to task: %d \n------------\n",task.task_name,task.task_text,task.date,days_to_task);
+    }
+    else if (priority == HIGH) {
+	    printf(YEL "\n------------\ntask name: %s \ntask text: %s \ntask date: %s \ndays to task: %d \n------------\n",task.task_name,task.task_text,task.date,days_to_task);
+    }
+    else {
+	    printf(GRN "\n------------\ntask name: %s \ntask text: %s \ntask date: %s \ndays to task: %d \n------------\n",task.task_name,task.task_text,task.date,days_to_task);
+    }
+}
+
+void display_tasks(char* task_path) {
+    struct Task* task_array;
+    int amount_of_tasks;
+    task_array = csv_to_task_array(task_path,&amount_of_tasks);
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    char current_day[64];
+    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
+
+
+    if (strcmp("task_name",task_array[0].task_name) == 0) {
+        for (int j = 0; j<amount_of_tasks; j++) {
+            task_array[j] = task_array[j+1];
+        }
+        amount_of_tasks--;
+    }
+
+    selectionSort(task_array,amount_of_tasks);
+    
+    for (int i = 0; i<amount_of_tasks; i++) {
+        struct Task current_task = task_array[i];
+        print_task(current_task,current_day);
+    }
+
+};
+
+void display_upcoming() {
+
+};
+
+
 int main(int argc, char** argv) {
 	char task_path[1024];
     char * home = getenv("HOME");
-    int start_of_loop = 0;
 	/* Set up task_path so it points to the flashcards folder */
 	sprintf(task_path,"%s/%s",home,PATH_TO_FILE_FROM_HOME);
-    printf("\nInitial set up complete\n");
-    add_task("added task in code", "hope this text is inputted correctly", "2021-04-11", task_path);
-    remove_task_by_name(task_path, "\"new_name\"");
-    //remove_task_by_name(task_path, "new_name");
 
-    struct Task* task_array;
-    int amount_of_tasks;
-    printf("\nReading files... %s\n",task_path);
-    task_array = csv_to_task_array(task_path,&amount_of_tasks);
-    printf("\nReaded files...\n");
+    display_tasks(task_path);
 
 
-    if (strcmp("task_name",task_array[0].task_name) == 0) 
-        start_of_loop = 1;
-    for (int i = start_of_loop; i<amount_of_tasks; i++) {
-        struct Task current_task = task_array[i];
-        print_task(current_task);
-    }
 
 
     return EXIT_SUCCESS;
