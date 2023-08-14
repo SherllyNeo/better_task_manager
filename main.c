@@ -19,7 +19,7 @@
 #define CYN "\e[0;36m"
 #define WHT "\e[0;37m"
 
-#define SIZE 100000
+#define SIZE 10000
 
 enum Emergency {
     LOW,
@@ -166,9 +166,7 @@ void selectionSort(struct Task* arr,int size_of_array)
     for (i = 0; i < size_of_array - 1; i++) {
         min_idx = i;
         for (j = i + 1; j < size_of_array; j++) {
-            printf("dates pre difference: %s %s",arr[j].date,arr[min_idx].date);
             int difference = getDifference_str(arr[j].date,arr[min_idx].date);
-            printf("dates post difference: %s %s",arr[j].date,arr[min_idx].date);
             if (difference < 0) 
                 min_idx = j;
             }
@@ -236,7 +234,45 @@ void display_tasks(char* task_path) {
 
 };
 
-void display_upcoming() {
+void display_upcoming(char* task_path) {
+    struct Task* task_array;
+    int amount_of_tasks;
+    task_array = csv_to_task_array(task_path,&amount_of_tasks);
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    char current_day[64];
+    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
+
+
+    if (strcmp("task_name",task_array[0].task_name) == 0) {
+        for (int j = 0; j<amount_of_tasks; j++) {
+            task_array[j] = task_array[j+1];
+        }
+        amount_of_tasks--;
+    }
+
+    selectionSort(task_array,amount_of_tasks);
+
+    int count_of_urgent = 0;
+    int count_of_high = 0;
+    int count_of_low = 0;
+    
+    for (int i = 0; i<amount_of_tasks; i++) {
+        struct Task current_task = task_array[i];
+        enum Emergency category = categorise_task_date(current_task.date);
+        if (category == URGENT) {
+            count_of_urgent++;
+        }
+        else if (category == HIGH) {
+            count_of_high++;
+        }
+        else {
+            count_of_low++;
+        }
+    }
+
+    printf("|❌%d ❗%d  📅%d |\n",count_of_urgent,count_of_high,count_of_low);
+
 
 };
 
@@ -247,7 +283,7 @@ int main(int argc, char** argv) {
 	/* Set up task_path so it points to the flashcards folder */
 	sprintf(task_path,"%s/%s",home,PATH_TO_FILE_FROM_HOME);
 
-    display_tasks(task_path);
+    display_upcoming(task_path);
 
 
 
