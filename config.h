@@ -1,2 +1,2 @@
 
-char* PATH_TO_FILE_FROM_HOME = ".local/share/new_todo_file.csv";
+char* PATH_TO_FILE_FROM_HOME = ".local/share/todo_file.csv";
