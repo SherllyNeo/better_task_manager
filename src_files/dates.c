@@ -3,13 +3,13 @@
 #include <stdio.h>
 
 
-struct {
+typedef struct {
     int d, m, y;
-} typedef Date ;
+} Date ;
 
 void print_date(Date dt) {
     printf("%d-%d-%d\n",dt.y,dt.m,dt.d);
-};
+}
   
 // To store number of days in 
 // all months from January to Dec.
@@ -84,7 +84,7 @@ void parse_date(char* date_string,Date *date_buffer) {
     date_buffer->d = array[2];
     date_buffer->m = array[1];
     date_buffer->y = array[0];
-};
+}
 
 int getDifference_str(char* date_1,char* date_2)
 {

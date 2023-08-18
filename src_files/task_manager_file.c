@@ -9,14 +9,12 @@
 #include <dirent.h>
 #include <stdbool.h>
 
-#define BLK "\e[0;30m"
-#define RED "\e[0;31m"
-#define GRN "\e[0;32m"
-#define YEL "\e[0;33m"
-#define BLU "\e[0;34m"
-#define MAG "\e[0;35m"
-#define CYN "\e[0;36m"
-#define WHT "\e[0;37m"
+
+#define RED     "\x1b[31m"
+#define GRN   "\x1b[32m"
+#define YEL   "\x1b[0;33m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 
 #define SIZE 10000
 
@@ -44,7 +42,7 @@ struct Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
 
         char *token = strtok(buffer, ",");
         /* Make a struct Task to add to task_array */
-        struct Task tmp_task = {};
+        struct Task tmp_task = {'\0'};
         while (token) {
             /* this will be 3 each time. The promt, answer, date and delay */
             int parse_helper = flag % 3;
@@ -148,7 +146,7 @@ int add_task(char* task_name, char* task_text, char* date,char* task_path) {
     fprintf(task_list,"%s,%s,%s\n",task_name,task_text,date);
     fclose(task_list);
     return 1;
-};
+}
 
 
 void swap(struct Task* xp, struct Task* yp)
@@ -177,7 +175,8 @@ enum Emergency categorise_task_date(char* task_date) {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     char current_day[64];
-    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
+    strftime(current_day, sizeof(current_day), "%F", tm);
+    
 
     int days_to_task = getDifference_str(task_date,current_day);
     enum Emergency priority;
@@ -191,7 +190,7 @@ enum Emergency categorise_task_date(char* task_date) {
         priority = LOW;
     }
     return priority;
-};
+}
 
 void print_task(struct Task task,char* current_day) {
     int days_to_task = getDifference_str(task.date,current_day);
@@ -214,7 +213,7 @@ void display_tasks(char* task_path) {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     char current_day[64];
-    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
+    strftime(current_day, sizeof(current_day), "%F", tm);
 
 
     if (strcmp("task_name",task_array[0].task_name) == 0) {
@@ -231,18 +230,12 @@ void display_tasks(char* task_path) {
         print_task(current_task,current_day);
     }
 
-};
+}
 
 void display_upcoming(char* task_path) {
     struct Task* task_array;
     int amount_of_tasks;
     task_array = csv_to_task_array(task_path,&amount_of_tasks);
-    time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-    char current_day[64];
-    size_t ret = strftime(current_day, sizeof(current_day), "%F", tm);
-
-
     if (strcmp("task_name",task_array[0].task_name) == 0) {
         for (int j = 0; j<amount_of_tasks; j++) {
             task_array[j] = task_array[j+1];
@@ -273,5 +266,5 @@ void display_upcoming(char* task_path) {
     printf("|❌%d ❗%d  📅%d |\n",count_of_urgent,count_of_high,count_of_low);
 
 
-};
+}
 
