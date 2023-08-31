@@ -7,5 +7,5 @@ better_task_manager: main.c $(SRC_FILES)
 	$(CC) $(C_FLAGS) main.c $(DEPS) -o btm
 
 install:
-	$(CC) $(C_FLAGS) main.c $(DEPS) -o btm && cp ./btm /usr/local/bin
+	$(CC) $(C_FLAGS) main.c $(DEPS) -o btm && cp ./btm $(HOME)/.local/bin
 
