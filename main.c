@@ -15,6 +15,11 @@
 char help[] = "\nSherlly's Better Task Manager \n--help\t-h\t\tHelp \n--upcoming\t-u\tPrints status bar summary |❌8 ❗5  📅0 | \n--list\t-l\t\tLists tasks with colour coded urgency \n--add\t-a\t\tAdd task like so btm --add -n \"name\" -t \"task desc\" -d \"YYYY-mm-dd\" \n--remove\t-r\t\tRemove task like so btm --remove \"name\"\n\n";
 
 int main(int argc, char** argv) {
+    if (argc<2) {
+        fprintf(stderr,"Must have at least two arguements"); 
+        printf("%s\n",help);
+        exit(EXIT_FAILURE);
+    };
 	char task_path[1024];
     char * home = getenv("HOME");
 	/* Set up task_path so it points to the flashcards folder */
