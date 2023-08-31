@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
             printf("\nTask removed!\n");
         }
         else{
-            fprintf(stderr,"\nError removing task!\n");
+            fprintf(stderr,"Error removing task!\n");
         }
     }
     else {
