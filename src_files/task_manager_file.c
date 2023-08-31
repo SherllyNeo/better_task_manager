@@ -99,6 +99,7 @@ int remove_task_by_name(char *filepath, char* task_to_remove) {
 	    return 0;
 	  }
 
+      bool removed = false;
 	  bool keep_reading = true;
 
 	  int current_line = 1;
@@ -119,6 +120,7 @@ int remove_task_by_name(char *filepath, char* task_to_remove) {
 	    /* Replace if first column is the name to remove */
 	    else if (!strcmp(task_name,task_to_remove)) {
             current_line++;
+            removed = true;
 	    }
 	    else  {
 	    fputs(buffer, temp);
@@ -132,6 +134,10 @@ int remove_task_by_name(char *filepath, char* task_to_remove) {
 
 	  remove(filepath);
 	  rename(temp_filename, filepath);
+      if (!removed) {
+          fprintf(stderr,"Task name %s was not found\n",task_to_remove);
+          return 0;
+      };
 	  return 1;
 }
 
