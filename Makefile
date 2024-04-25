@@ -1,7 +1,7 @@
 CC=gcc
 C_FLAGS=-std=gnu11 -Wextra -Wall -pedantic
 SRC=src/config.h src/dates.h src/task_manager_file.h
-DEPS=config.h src/dates.h src/task_manager_file.h
+DEPS=src/config.h src/dates.h src/task_manager_file.h
 
 better_task_manager: src/main.c $(SRC)
 	mkdir -p bin

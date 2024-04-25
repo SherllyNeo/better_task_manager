@@ -9,10 +9,23 @@
 #include <stdbool.h>
 #include "task_manager_file.h"
 
+char banner[] = " ____       _   _              _____         _\n \
+| __ )  ___| |_| |_ ___ _ __  |_   _|_ _ ___| | __ \n \
+|  _ \\ / _ \\ __| __/ _ \\ '__|   | |/ _` / __| |\\/ / \n \
+| |_) |  __/ |_| ||  __/ |      | | (_| \\__ \\   < \n \
+|____/ \\___|\\__|\\__\\___|_|      |_|\\__,_|___/_|\\_\\ \n \
+\
+ __  __\n \
+|  \\/  | __ _ _ __   __ _  __ _  ___ _ __\n \
+| |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\ '__|\n \
+| |  | | (_| | | | | (_| | (_| |  __/ |\n \
+|_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|\n \
+                          |___/\n  ";
 
-char help[] = "\nSherlly's Better Task Manager \n--help\t-h\t\tHelp \n--upcoming\t-u\tPrints status bar summary |❌8 ❗5  📅0 | \n--list\t-l\t\tLists tasks with colour coded urgency \n--add\t-a\t\tAdd task like so btm --add -n \"name\" -t \"task desc\" -d \"YYYY-mm-dd\" \n--remove\t-r\t\tRemove task like so btm --remove \"name\"\n\n";
+char help[] = "--help\t-h\t\tHelp \n--upcoming\t-u\tPrints status bar summary |❌8 ❗5  📅0 | \n--list\t-l\t\tLists tasks with colour coded urgency \n--add\t-a\t\tAdd task like so btm --add -n \"name\" -t \"task desc\" -d \"YYYY-mm-dd\" \n--remove\t-r\t\tRemove task like so btm --remove \"name\"\n\n";
 
 int main(int argc, char** argv) {
+    printf("%s\n",banner);
     if (argc<2) {
         fprintf(stderr,"Must have at least two arguements"); 
         printf("%s\n",help);
