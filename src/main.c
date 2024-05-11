@@ -25,8 +25,8 @@ char banner[] = " ____       _   _              _____         _\n \
 char help[] = "--help\t-h\t\tHelp \n--upcoming\t-u\tPrints status bar summary |❌8 ❗5  📅0 | \n--list\t-l\t\tLists tasks with colour coded urgency \n--add\t-a\t\tAdd task like so btm --add -n \"name\" -t \"task desc\" -d \"YYYY-mm-dd\" \n--remove\t-r\t\tRemove task like so btm --remove \"name\"\n\n";
 
 int main(int argc, char** argv) {
-    printf("%s\n",banner);
     if (argc<2) {
+        printf("%s\n",banner);
         fprintf(stderr,"Must have at least two arguements"); 
         printf("%s\n",help);
         exit(EXIT_FAILURE);
@@ -42,9 +42,11 @@ int main(int argc, char** argv) {
         display_upcoming(task_path);
     }
     else if (!strcmp(argv[1],"--list") || !strcmp(argv[1],"-l")) {
+        printf("%s\n",banner);
         display_tasks(task_path);
     }
     else if (!strcmp(argv[1],"--add") || !strcmp(argv[1],"-a")) {
+        printf("%s\n",banner);
        char* name; 
        char* text; 
        char* date; 
@@ -70,6 +72,7 @@ int main(int argc, char** argv) {
 
     }
     else if (!strcmp(argv[1],"--remove") || !strcmp(argv[1],"-r")) {
+        printf("%s\n",banner);
         int check_if_removed = remove_task_by_name(task_path,argv[2]);
         if (check_if_removed) {
             printf("\nTask removed!\n");
