@@ -15,6 +15,17 @@ cd better_task_manager && make && make install
 ```
 set path options in src/config.h
 
+## Features
+* Pretty coloured output 
+
+![](./images/list.png)
+
+![](./images/taskbar.png)
+
+* Add, Read and Remove tasks, no updating. So not CRUD.
+* Runs off a plain CSV so your tasks are portable, syncable and awesome
+* Uses my ![dsvParser](https://github.com/SherllyNeo/dsvParser) so it has proper csv parsing
+
 
 ## Useage
 
