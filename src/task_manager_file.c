@@ -20,19 +20,19 @@
 
 #define SIZE 10000
 
-enum Emergency {
+typedef enum {
     LOW,
     HIGH,
     URGENT
-};
+} Emergency;
 
-struct Task {
+typedef struct {
     char date[SIZE];
     char task_name[SIZE];
     char task_text[SIZE];
-};
+} Task;
 
-enum Emergency categorise_task_date(char* task_date) {
+Emergency categorise_task_date(char* task_date) {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     char current_day[64];
@@ -40,7 +40,7 @@ enum Emergency categorise_task_date(char* task_date) {
     
 
     int days_to_task = getDifference_str(task_date,current_day);
-    enum Emergency priority;
+    Emergency priority;
     if (days_to_task < URGENT_TOLERENCE ) {
         priority = URGENT;
     }
@@ -54,9 +54,9 @@ enum Emergency categorise_task_date(char* task_date) {
 }
 
 
-void print_task(struct Task task,char* current_day) {
+void print_task(Task task,char* current_day) {
     int days_to_task = getDifference_str(task.date,current_day);
-    enum Emergency priority = categorise_task_date(task.date);
+    Emergency priority = categorise_task_date(task.date);
     if (priority == URGENT) {
 	    printf(RED "\n------------\ntask name: %s \ntask text: %s \ntask date: %s \ndays to task: %d \n------------\n",task.task_name,task.task_text,task.date,days_to_task);
     }
@@ -68,7 +68,7 @@ void print_task(struct Task task,char* current_day) {
     }
 }
 
-struct Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
+Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
     if (task_deck == NULL) {
         fprintf(stderr, "file path is null\n");
         return NULL;
@@ -84,7 +84,7 @@ struct Task* csv_to_task_array(char* task_deck,int* p_amount_of_tasks) {
     *p_amount_of_tasks = (int)parsed_csv.rows;
 
 
-    struct Task *task_array = calloc(parsed_csv.rows,sizeof(struct Task));
+    Task *task_array = calloc(parsed_csv.rows,sizeof(Task));
 
     for (size_t row = 0; row<parsed_csv.rows;row++) {
         strncpy(task_array[row].task_name,parsed_csv.content[row][0],SIZE);
@@ -183,14 +183,14 @@ int add_task(char* task_name, char* task_text, char* date,char* task_path) {
 }
 
 
-void swap(struct Task* xp, struct Task* yp)
+void swap(Task* xp, Task* yp)
 {
-    struct Task temp = *xp;
+    Task temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
   
-void selectionSort(struct Task* arr,int size_of_array)
+void selectionSort(Task* arr,int size_of_array)
 {
     int i, j, min_idx;
   
@@ -208,7 +208,7 @@ void selectionSort(struct Task* arr,int size_of_array)
 
 void display_tasks(char* task_path) {
     int amount_of_tasks = 0;
-    struct Task* task_array = csv_to_task_array(task_path,&amount_of_tasks);
+    Task* task_array = csv_to_task_array(task_path,&amount_of_tasks);
     if (!task_array) {
         fprintf(stderr, "unable to read task array\n");
         exit(EXIT_FAILURE);
@@ -232,7 +232,7 @@ void display_tasks(char* task_path) {
 
 
     for (int i = 0; i<amount_of_tasks; i++) {
-        struct Task current_task = task_array[i];
+        Task current_task = task_array[i];
         print_task(current_task,current_day);
     }
 
@@ -241,7 +241,7 @@ void display_tasks(char* task_path) {
 }
 
 void display_upcoming(char* task_path) {
-    struct Task* task_array;
+    Task* task_array;
     int amount_of_tasks;
     task_array = csv_to_task_array(task_path,&amount_of_tasks);
     if (strcmp("task_name",task_array[0].task_name) == 0) {
@@ -258,8 +258,8 @@ void display_upcoming(char* task_path) {
     int count_of_low = 0;
     
     for (int i = 0; i<amount_of_tasks; i++) {
-        struct Task current_task = task_array[i];
-        enum Emergency category = categorise_task_date(current_task.date);
+        Task current_task = task_array[i];
+        Emergency category = categorise_task_date(current_task.date);
         if (category == URGENT) {
             count_of_urgent++;
         }
