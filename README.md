@@ -20,7 +20,7 @@ set path options in src/config.h
 
 ![](./images/list.png)
 
-![](./images/taskbar.png)
+![](./images/taskbarbetter.png)
 
 * Simple and effective. You always want to keep things 0.
 * Add, Read and Remove tasks, no updating. So not CRUD.
