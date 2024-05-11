@@ -22,7 +22,9 @@ set path options in src/config.h
 
 ![](./images/taskbar.png)
 
+* Simple and effective. You always want to keep things 0.
 * Add, Read and Remove tasks, no updating. So not CRUD.
+* Change config in src/config.h for when you want tasks to become high priority or urgent
 * Runs off a plain CSV so your tasks are portable, syncable and awesome
 * Uses my ![dsvParser](https://github.com/SherllyNeo/dsvParser) so it has proper csv parsing
 
