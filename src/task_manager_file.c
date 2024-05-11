@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <stdbool.h>
+#include "config.h"
 #include "dsvParser.h"
 
 
@@ -40,10 +41,10 @@ enum Emergency categorise_task_date(char* task_date) {
 
     int days_to_task = getDifference_str(task_date,current_day);
     enum Emergency priority;
-    if (days_to_task < 0 ) {
+    if (days_to_task < URGENT_TOLERENCE ) {
         priority = URGENT;
     }
-    else if (days_to_task < 2) {
+    else if (days_to_task < HIGH_PRIORITY_TOLERENCE) {
         priority = HIGH;
     }
     else  {
