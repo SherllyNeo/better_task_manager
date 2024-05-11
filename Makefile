@@ -1,5 +1,5 @@
 CC=gcc
-C_FLAGS=-std=gnu11 -Wextra -Wall -pedantic
+C_FLAGS=-std=gnu11 -Wextra -Wall -Wpedantic
 SRC=src/config.h src/dates.h src/task_manager_file.h
 DEPS=src/config.h src/dates.h src/task_manager_file.h
 
